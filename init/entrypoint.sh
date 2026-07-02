@@ -6,7 +6,7 @@ repo_root="/tmp/repo"
 copy_from_repo() {
     local rel_path="$1" dest="$2" resolved
 
-    resolved="$(realpath -e -- "$repo_root/$rel_path")" || {
+    resolved="$(realpath "$repo_root/$rel_path")" || {
         echo "Path does not exist: $rel_path" >&2
         return 1
     }
