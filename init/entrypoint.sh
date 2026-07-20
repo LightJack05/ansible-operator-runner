@@ -55,6 +55,14 @@ init_git() {
 }
 
 setup_dependencies() {
+    # ansible-galaxy errors out on a requirements file that parses to nothing
+    # ("No requirements found in file"), so skip installation unless the file
+    # has at least one line that is not blank, a comment or a document marker.
+    if ! grep -qvE '^[[:space:]]*(#|$)|^(---|\.\.\.)[[:space:]]*$' /playbook/requirements.yml; then
+        echo "No requirements listed in /playbook/requirements.yml, skipping dependency installation."
+        return 0
+    fi
+
     ansible-galaxy role install \
             -r /playbook/requirements.yml \
             -p /deps/roles
